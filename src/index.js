@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.scss';
 import { Provider, connect } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { createStore, combineReducers } from '@reduxjs/toolkit';
@@ -21,7 +21,8 @@ const textReducer = ((state = defaultState, action) => {
   switch (action.type) {
     case TEXTUPDATE:
     console.log(action);
-    return state = {text:action.text}
+    state = Object.assign({}, state, {text:action.text});
+    return state;
     break;
     default:
     return state;
@@ -45,12 +46,44 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
+//main function for translating the input into html elements
+const HTMLCREATOR = (input) => {
+  let returnedText = input.replace('\n', <br/>),
+      newInput = input.split("");
+      console.log(newInput);
+
+//regex
+let newLineRegex = /\n/;
+
+let test = <div className='previewText'></div>
+  return (
+    test
+  )
+}
+
+////////////////////////////////////////////////////////////
+
+class EditedText extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      textToEdit: this.props.text
+    }
+  }
+  render() {
+    const test = HTMLCREATOR(this.props.text)
+    return (
+      test
+    )
+  }
+}
+
 
 class Wrapper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: 's'
+      text: ''
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -68,12 +101,18 @@ class Wrapper extends React.Component {
       <div className="App">
         <div className='wrapper'>
           <div className='textholder'>
+            <div className='textholdertitle'>
+            Editor
+            </div>
             <textarea value={this.state.text} onChange={this.handleChange} id='editor'>
             </textarea>
           </div>
           <div className='previewholder'>
+            <div className='previewholdertitle'>
+            Previewer
+            </div>
             <div id='preview'>
-            {this.state.text}
+              <EditedText text={this.state.text}/>
             </div>
           </div>
         </div>
